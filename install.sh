@@ -210,7 +210,7 @@ log_info "Memasang paket dasar Amanda OS..."
 
 pacstrap -K /mnt base base-devel linux-lts linux-lts-headers $firms $ucodes \
     networkmanager network-manager-applet firewalld git wget neovim \
-    efibootmgr grub sbctl iptables-nft bash-completion cryptsetup plymouth archlinux-keyring --noconfirm
+    efibootmgr os-prober grub sbctl iptables-nft bash-completion cryptsetup plymouth archlinux-keyring --noconfirm
 
 # Generate FSTAB
 log_info "Membuat file fstab..."
@@ -274,8 +274,10 @@ plymouth-set-default-theme -R bgrt
 echo "Memasang GRUB Bootloader ke Partisi Boot Amanda OS..."
 grub-install --target=x86_64-efi --efi-directory=/boot --bootloader-id=AmandaOS --modules="tpm" --disable-shim-lock
 
-echo "Mengonfigurasi parameter Kernel untuk LUKS + Plymouth..."
+echo "Mengonfigurasi parameter Kernel..."
+sed -i 's/^GRUB_DISTRIBUTOR=.*/GRUB_DISTRIBUTOR="AmandaOS"/' /etc/default/grub
 sed -i 's/^GRUB_CMDLINE_LINUX_DEFAULT=.*/GRUB_CMDLINE_LINUX_DEFAULT="rd.luks.name=$luks_uuid=cryptroot root=\/dev\/mapper\/cryptroot quiet splash loglevel=3"/' /etc/default/grub
+echo "GRUB_DISABLE_OS_PROBER=false" >> /etc/default/grub
 
 # Buat konfigurasi GRUB
 grub-mkconfig -o /boot/grub/grub.cfg
@@ -296,7 +298,7 @@ sleep 2
 
 # --- 5. KDE PLASMA PACKAGE INSTALLATION ---
 log_info "Memasang Lingkungan Desktop KDE Plasma..."
-arch-chroot /mnt pacman -S plasma-meta sddm konsole dolphin pipewire pipewire-jack pipewire-alsa pipewire-pulse wireplumber pamixer ffmpegthumbs plymouth-kcm --noconfirm || arch-chroot /mnt pacman -S plasma-meta sddm konsole dolphin pipewire pipewire-jack pipewire-alsa pipewire-pulse wireplumber pamixer ffmpegthumbs --noconfirm
+arch-chroot /mnt pacman -S plasma-meta sddm konsole dolphin firefox pipewire pipewire-jack pipewire-alsa pipewire-pulse wireplumber pamixer ffmpegthumbs plymouth-kcm --noconfirm || arch-chroot /mnt pacman -S plasma-meta sddm konsole dolphin pipewire pipewire-jack pipewire-alsa pipewire-pulse wireplumber pamixer ffmpegthumbs --noconfirm
 
 log_info "Mengaktifkan Display Manager (SDDM)..."
 arch-chroot /mnt systemctl enable sddm
