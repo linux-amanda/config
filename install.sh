@@ -210,7 +210,7 @@ log_info "Memasang paket dasar Amanda OS..."
 
 pacstrap -K /mnt base base-devel linux-lts linux-lts-headers $firms $ucodes \
     networkmanager network-manager-applet firewalld git wget neovim \
-    efibootmgr os-prober grub sbctl iptables-nft bash-completion cryptsetup plymouth archlinux-keyring --noconfirm
+    efibootmgr os-prober grub ntfs-3g sbctl iptables-nft bash-completion cryptsetup plymouth archlinux-keyring --noconfirm
 
 # Generate FSTAB
 log_info "Membuat file fstab..."
@@ -310,7 +310,7 @@ sleep 2
 log_info "Memasang Wallpaper default"
 rm /mnt/usr/share/wallpapers/Next/contents/images/*
 cp -r amanda/* /mnt 
-arch-chroot /mnt sed -i '/favoritesPortedToKAstats=true/a icon=\/usr\/share\/pixmaps\/amanda-logo.png' plasma-org.kde.plasma.desktop-appletsrc
+arch-chroot /mnt sed -i '/favoritesPortedToKAstats=true/a icon=\/usr\/share\/pixmaps\/amanda-logo.png' /home/$username/.config/plasma-org.kde.plasma.desktop-appletsrc
 
 # --- 7. REMOVING PROVISIONING CONFIG
 rm -fr config
