@@ -208,8 +208,6 @@ sleep 2
 # --- 3. PACSTRAP (INSTALL BASE PACKAGES + PLYMOUTH + CRYPTSETUP) ---
 log_info "Memasang paket dasar Amanda OS..."
 
-pacman -Sy git archlinux-keyring --noconfirm
-
 pacstrap -K /mnt base base-devel linux-lts linux-lts-headers $firms $ucodes \
     networkmanager network-manager-applet firewalld git wget neovim \
     efibootmgr grub sbctl iptables-nft bash-completion cryptsetup plymouth archlinux-keyring --noconfirm
@@ -309,8 +307,11 @@ sleep 2
 # --- 6. CONFIG WALLPAPER PLASMA ---
 log_info "Memasang Wallpaper default"
 rm /mnt/usr/share/wallpapers/Next/contents/images/*
-git clone https://github.com/linux-amanda/config.git config
-cp -r config/* /mnt && rm -fr config
+cp -r config/* /mnt 
+arch-chroot /mnt sed -i '/favoritesPortedToKAstats=true/a icon=\/usr\/share\/pixmaps\/amanda-logo.png' plasma-org.kde.plasma.desktop-appletsrc
+
+# --- 7. REMOVING PROVISIONING CONFIG
+rm -fr config
 
 # --- CLEAN UP & FINISH ---
 show_header
