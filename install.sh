@@ -309,7 +309,7 @@ sleep 2
 # --- 6. CONFIG WALLPAPER PLASMA ---
 log_info "Memasang Wallpaper default"
 rm /mnt/usr/share/wallpapers/Next/contents/images/*
-cp -r config/* /mnt 
+cp -r amanda/* /mnt 
 arch-chroot /mnt sed -i '/favoritesPortedToKAstats=true/a icon=\/usr\/share\/pixmaps\/amanda-logo.png' plasma-org.kde.plasma.desktop-appletsrc
 
 # --- 7. REMOVING PROVISIONING CONFIG
