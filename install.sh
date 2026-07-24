@@ -110,6 +110,30 @@ while [[ -z "$pw" ]]; do
     echo
 done
 
+log_info "Displaying available timezone regions:"
+echo -e "${YELLOW}"
+ls /usr/share/zoneinfo
+echo -e "${NC}"
+
+read -rp "Select region example (Asia): " region
+
+log_info "Displaying available timezones for region '$region':"
+echo -e "${YELLOW}"
+ls /usr/share/zoneinfo/$region
+echo -e "${NC}"
+
+read -rp "Select country example (Jakarta): " country
+
+timezone="$region/$country"
+
+log_info "Displaying available locales..."
+
+echo -e "${YELLOW}"
+grep -E "^[^#]" /etc/locale.gen
+echo -e "${NC}"
+
+read -rp "Select locale (example: en_US.UTF-8): " locale
+
 # --- CONFIRMATION SUMMARY ---
 show_header
 log_warning "WARNING! The following actions will erase all data on the selected partitions:"
@@ -120,6 +144,8 @@ echo -e "  - ${RED}Swap Partition:${NC}               $swap (will be formatted a
 echo
 echo -e "  - ${CYAN}Username:${NC}                 $username"
 echo -e "  - ${CYAN}Hostname:${NC}                 $hostname"
+echo -e "  - ${CYAN}timezone:${NC}                 $timezone"
+echo -e "  - ${CYAN}locale:${NC}                   $locale"
 
 read -rp "Are you sure you want to continue with the installation? (type 'yes' to confirm): " confirm
 
@@ -211,34 +237,10 @@ arch-chroot /mnt /bin/bash <<EOF
 set -e
 
 # --- 4.1. Timezone ---
-log_info "Displaying available timezone regions:"
-echo -e "${YELLOW}"
-ls /usr/share/zoneinfo
-echo -e "${NC}"
-
-read -rp "Select region example (Asia): " region
-
-log_info "Displaying available timezones for region '$region':"
-echo -e "${YELLOW}"
-ls /usr/share/zoneinfo/$region
-echo -e "${NC}"
-
-read -rp "Select country example (Jakarta): " country
-
-timezone="$region/$country"
-
 ln -sf /usr/share/zoneinfo/$timezone /etc/localtime
 hwclock --systohc
 
 # --- 4.2. Locale
-log_info "Displaying available locales..."
-
-echo -e "${YELLOW}"
-grep -E "^[^#]" /etc/locale.gen
-echo -e "${NC}"
-
-read -rp "Select locale (example: en_US.UTF-8): " locale
-
 sed -i "s/^#${locale}/${locale}/" /etc/locale.gen
 
 locale-gen
@@ -246,12 +248,12 @@ locale-gen
 echo "LANG=${locale}" > /etc/locale.conf
 
 # --- 4.3. Hostname ---
-log_info "Configuring hostname..."
+echo "Configuring hostname..."
 
 echo "$hostname" > /etc/hostname
 
 # --- 4.4. Users & Groups ---
-log_info "Creating new user ($username)..."
+echo "Creating new user ($username)..."
 
 useradd -m -G wheel -s /bin/bash "$username"
 
@@ -259,35 +261,35 @@ echo "$username:$pw" | chpasswd
 echo "root:$pw" | chpasswd
 
 # --- 4.5. Sudoers Configuration ---
-log_info "Configuring sudoers..."
+echo "Configuring sudoers..."
 echo "%wheel ALL=(ALL:ALL) ALL" > /etc/sudoers.d/10-installer-wheel
 chmod 440 /etc/sudoers.d/10-installer-wheel
 
 # --- 4.6. Services Activation ---
-log_info "Enabling essential system services..."
+echo "Enabling essential system services..."
 systemctl enable NetworkManager
 systemctl enable firewalld
 
 # --- 4.6. Configure mkinitcpio (Systemd + Plymouth + sd-encrypt) ---
-log_info "Configuring HOOKS and MODULES for Plymouth and sd-encrypt..."
+echo "Configuring HOOKS and MODULES for Plymouth and sd-encrypt..."
 if [[ -n "$gpu_module" ]]; then
     sed -i "s/^MODULES=()/MODULES=($gpu_module)/" /etc/mkinitcpio.conf
 fi
 
 sed -i 's/^HOOKS=.*/HOOKS=(base systemd plymouth autodetect kms block sd-encrypt filesystems keyboard fsck)/' /etc/mkinitcpio.conf
 
-log_info "Generating initial RAM disk (mkinitcpio)..."
+echo "Generating initial RAM disk (mkinitcpio)..."
 mkinitcpio -P
 
 # --- 4.7. Plymouth Theme Setup ---
-log_info "Configuring Plymouth graphical theme..."
+echo "Configuring Plymouth graphical theme..."
 plymouth-set-default-theme -R bgrt
 
 # --- 4.8. GRUB Setup (sd-encrypt & Plymouth arguments) ---
-log_info "Installing GRUB bootloader to Amanda OS boot partition..."
+echo "Installing GRUB bootloader to Amanda OS boot partition..."
 grub-install --target=x86_64-efi --efi-directory=/boot --bootloader-id=AmandaOS --modules="tpm" --disable-shim-lock
 
-log_info "Configuring kernel parameters..."
+echo "Configuring kernel parameters..."
 sed -i 's/^GRUB_DISTRIBUTOR=.*/GRUB_DISTRIBUTOR="AmandaOS"/' /etc/default/grub
 sed -i 's/^GRUB_CMDLINE_LINUX_DEFAULT=.*/GRUB_CMDLINE_LINUX_DEFAULT="rd.luks.name=$luks_uuid=cryptroot root=\/dev\/mapper\/cryptroot quiet splash loglevel=3"/' /etc/default/grub
 echo "GRUB_DISABLE_OS_PROBER=false" >> /etc/default/grub
