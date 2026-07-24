@@ -299,7 +299,7 @@ grub-install --target=x86_64-efi --efi-directory=/boot --bootloader-id=AmandaOS 
 
 echo "Configuring kernel parameters..."
 sed -i 's/^GRUB_DISTRIBUTOR=.*/GRUB_DISTRIBUTOR="AmandaOS"/' /etc/default/grub
-sed -i 's/^GRUB_CMDLINE_LINUX_DEFAULT=.*/GRUB_CMDLINE_LINUX_DEFAULT="root=$root_uuid quiet splash loglevel=3"/' /etc/default/grub
+sed -i 's/^GRUB_CMDLINE_LINUX_DEFAULT=.*/GRUB_CMDLINE_LINUX_DEFAULT="root=UUID='"$root_uuid"' quiet splash loglevel=3"/' /etc/default/grub
 echo "GRUB_DISABLE_OS_PROBER=false" >> /etc/default/grub
 
 # Buat konfigurasi GRUB
