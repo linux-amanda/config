@@ -324,7 +324,7 @@ sleep 2
 
 # --- 6. CONFIG WALLPAPER PLASMA ---
 log_info "Installing default wallpaper..."
-rm /mnt/usr/share/wallpapers/Next/contents/images/*
+rm -fr /mnt/usr/share/wallpapers/*
 rm /mnt/usr/share/plasma/look-and-feel/org.kde.breeze.desktop/contents/splash/images/*
 cp -r amanda/* /mnt 
 
