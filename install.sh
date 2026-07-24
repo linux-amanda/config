@@ -132,15 +132,20 @@ read -rp "Select country example (Jakarta): " country
 timezone="$region/$country"
 
 echo
-log_info "Displaying available locales..."
-
+log_info "Displaying popular locales..."
 
 echo -e "${YELLOW}"
-cat /etc/locale.gen
+# Filter hanya locale populer dari /etc/locale.gen (tanpa baris komentar)
+grep -E "^\s*#?\s*(en_US|id_ID|ja_JP|zh_CN|de_DE|fr_FR|es_ES|ru_RU)\.UTF-8" /etc/locale.gen | sed 's/^#//;s/^[ \t]*//'
 echo -e "${NC}"
 
+read -rp "Select locale from the list above (example: en_US.UTF-8): " locale
 
-read -rp "Select locale (example: en_US.UTF-8): " locale
+# Validasi sederhana agar input tidak kosong
+while [[ -z "$locale" ]]; do
+    log_error "Locale cannot be empty!"
+    read -rp "Select locale (example: en_US.UTF-8): " locale
+done
 clear
 
 
