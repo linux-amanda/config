@@ -284,7 +284,7 @@ if [[ -n "$gpu_module" ]]; then
     sed -i "s/^MODULES=()/MODULES=($gpu_module)/" /etc/mkinitcpio.conf
 fi
 
-sed -i 's/^HOOKS=.*/HOOKS=(base systemd plymouth autodetect kms block sd-encrypt filesystems keyboard fsck)/' /etc/mkinitcpio.conf
+sed -i 's/^HOOKS=.*/HOOKS=(base udev plymouth autodetect kms block filesystems keyboard fsck)/' /etc/mkinitcpio.conf
 
 echo "Generating initial RAM disk (mkinitcpio)..."
 mkinitcpio -P
