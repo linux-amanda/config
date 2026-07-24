@@ -134,18 +134,50 @@ timezone="$region/$country"
 echo
 log_info "Displaying popular locales..."
 
-echo -e "${YELLOW}"
-# Filter hanya locale populer dari /etc/locale.gen (tanpa baris komentar)
-grep -E "^\s*#?\s*(en_US|id_ID|ja_JP|zh_CN|de_DE|fr_FR|es_ES|ru_RU)\.UTF-8" /etc/locale.gen | sed 's/^#//;s/^[ \t]*//'
-echo -e "${NC}"
+log_info "Select locale by country name:"
+echo -e "  - ${CYAN}1. Indonesia${NC}      (id_ID.UTF-8)"
+echo -e "  - ${CYAN}2. United States${NC}  (en_US.UTF-8)"
+echo -e "  - ${CYAN}3. Japan${NC}          (ja_JP.UTF-8)"
+echo -e "  - ${CYAN}4. Great Britain${NC}  (en_GB.UTF-8)"
+echo -e "  - ${CYAN}5. Germany${NC}        (de_DE.UTF-8)"
+echo -e "  - ${CYAN}6. Other${NC}          (Type manually)"
+echo
 
-read -rp "Select locale from the list above (example: en_US.UTF-8): " locale
+read -rp "Enter country name or choice [Default: Indonesia]: " choice_input
 
-# Validasi sederhana agar input tidak kosong
-while [[ -z "$locale" ]]; do
-    log_error "Locale cannot be empty!"
-    read -rp "Select locale (example: en_US.UTF-8): " locale
-done
+# Konversi input ke huruf kecil untuk mempermudah pencocokan
+choice=$(echo "$choice_input" | tr '[:upper:]' '[:lower:]')
+
+case "$choice" in
+    1|indonesia|id)
+        locale="id_ID.UTF-8"
+        ;;
+    2|"united states"|us|usa|america)
+        locale="en_US.UTF-8"
+        ;;
+    3|japan|jp)
+        locale="ja_JP.UTF-8"
+        ;;
+    4|"great britain"|uk|england)
+        locale="en_GB.UTF-8"
+        ;;
+    5|germany|de)
+        locale="de_DE.UTF-8"
+        ;;
+    6|other)
+        read -rp "Enter full locale manually (e.g., fr_FR.UTF-8): " locale
+        ;;
+    "")
+        # Jika pengguna menekan Enter (kosong), gunakan default Indonesia
+        locale="id_ID.UTF-8"
+        ;;
+    *)
+        log_warning "Country not recognized. Defaulting to en_US.UTF-8"
+        locale="en_US.UTF-8"
+        ;;
+esac
+
+log_success "Selected locale: $locale"
 clear
 
 
