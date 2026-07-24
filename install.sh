@@ -220,7 +220,7 @@ log_info "Installing Amanda OS base packages..."
 
 pacstrap -K /mnt base base-devel linux-lts linux-lts-headers $firms $ucodes \
     networkmanager network-manager-applet firewalld git wget neovim \
-    efibootmgr os-prober grub ntfs-3g sbctl iptables-nft bash-completion cryptsetup plymouth archlinux-keyring \
+    efibootmgr os-prober grub ntfs-3g sbctl iptables-nft bash-completion plymouth archlinux-keyring \
     plasma-meta sddm konsole dolphin firefox pipewire pipewire-jack pipewire-alsa pipewire-pulse wireplumber pamixer ffmpegthumbs plymouth-kcm --noconfirm
 
 # Generate FSTAB
