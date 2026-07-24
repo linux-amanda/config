@@ -110,7 +110,7 @@ while [[ -z "$pw" ]]; do
     echo
 done
 
-
+echo
 log_info "Displaying available timezone regions:"
 echo -e "${YELLOW}"
 ls /usr/share/zoneinfo
@@ -119,7 +119,7 @@ echo -e "${NC}"
 
 read -rp "Select region example (Asia): " region
 
-
+echo
 log_info "Displaying available timezones for region '$region':"
 echo -e "${YELLOW}"
 ls /usr/share/zoneinfo/$region
@@ -131,7 +131,7 @@ read -rp "Select country example (Jakarta): " country
 
 timezone="$region/$country"
 
-
+echo
 log_info "Displaying available locales..."
 
 
@@ -141,7 +141,7 @@ echo -e "${NC}"
 
 
 read -rp "Select locale (example: en_US.UTF-8): " locale
-
+clear
 
 
 # --- CONFIRMATION SUMMARY ---
