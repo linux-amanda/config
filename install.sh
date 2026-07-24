@@ -328,7 +328,7 @@ mkinitcpio -P
 
 # --- 4.7. Plymouth Theme Setup ---
 echo "Configuring Plymouth graphical theme..."
-plymouth-set-default-theme -R bgrt
+plymouth-set-default-theme -R AmandaOS
 
 # --- 4.8. GRUB Setup (sd-encrypt & Plymouth arguments) ---
 echo "Installing GRUB bootloader to Amanda OS boot partition..."
