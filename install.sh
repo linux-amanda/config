@@ -202,7 +202,7 @@ log_info "Formatting swap partition: $swap"
 mkswap -f "$swap"
 
 # Ambil UUID dari partisi root terenkripsi asli untuk konfigurasi GRUB
-luks_uuid=$(blkid -s UUID -o value "$root")
+root_uuid=$(blkid -s UUID -o value "$root")
 
 log_success "Formatting and encryption completed successfully!"
 sleep 2
@@ -299,7 +299,7 @@ grub-install --target=x86_64-efi --efi-directory=/boot --bootloader-id=AmandaOS 
 
 echo "Configuring kernel parameters..."
 sed -i 's/^GRUB_DISTRIBUTOR=.*/GRUB_DISTRIBUTOR="AmandaOS"/' /etc/default/grub
-sed -i 's/^GRUB_CMDLINE_LINUX_DEFAULT=.*/GRUB_CMDLINE_LINUX_DEFAULT="rd.luks.name=$luks_uuid=cryptroot root=\/dev\/mapper\/cryptroot quiet splash loglevel=3"/' /etc/default/grub
+sed -i 's/^GRUB_CMDLINE_LINUX_DEFAULT=.*/GRUB_CMDLINE_LINUX_DEFAULT="root=$root_uuid quiet splash loglevel=3"/' /etc/default/grub
 echo "GRUB_DISABLE_OS_PROBER=false" >> /etc/default/grub
 
 # Buat konfigurasi GRUB
