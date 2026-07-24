@@ -179,9 +179,7 @@ fi
 firms="$firms sof-firmware alsa-firmware"
 
 # --- 1. FORMAT & ENCRYPT DISK ---
-log_info "Starting encryption and formatting process..."
-
-log_info "Formatting encrypted root partition ($root): ext4"
+log_info "Formatting root partition ($root): ext4"
 mkfs.ext4 -F -b 4096 $root
 
 log_info "Formatting Amanda OS boot partition: $boot (FAT32)"
