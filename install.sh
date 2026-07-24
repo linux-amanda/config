@@ -136,7 +136,7 @@ log_info "Displaying available locales..."
 
 
 echo -e "${YELLOW}"
-grep -E "^[^#]" /etc/locale.gen
+cat /etc/locale.gen
 echo -e "${NC}"
 
 
