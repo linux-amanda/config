@@ -1,0 +1,10 @@
+[Plymouth Theme]
+Name=AmandaOS
+Description=A beautiful custom boot screen for AmandaOS based on spinner.
+ModuleName=spinner
+
+[spinner]
+ImageDir=/usr/share/plymouth/themes/AmandaOS
+DebianLogo=false
+WatermarkHorizontalAlignment=0.5
+WatermarkVerticalAlignment=0.5
